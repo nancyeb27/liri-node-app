@@ -15,18 +15,48 @@ switch (liriArgument) {
 }
 // functions
 function movieThis() {
-    var movie = process.argv[3];
-    if(!movie) {
-        movie = "mr nobody";
-    }
-        params = movie
-        
-        axios.get("http://www.omdbapi.com/?t=" + params + "&y=&plot=short&r=json&tomatoes=true&apikey=trilogy").then(
-  function(response) {
-    console.log("The movie's rating is: " + response.data.imdbRating);
-  }
-);
+    var movieName = process.argv[3];
+     if(!movieName) {
+         movieName = "mr nobody";
+     }
+       
+    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&tomatoes=true&r=json&apikey=trilogy";
+        console.log(queryUrl);
+
+    axios.get(queryUrl).then(
+        function(error, response, body) {
+            console.log("The movie's rating is: " + response.data.imdbRating);
+            
+        if (!error && response.stausCode === 200){
+       
+    var movieObject = JSON.parse(body);
+          console.log(movieObject);
+
+          var movieResults = 
+          "-----------------------------begin----------------------------" + "\r\n"
+          "Title: " + movieObject.Title+"\r\n" +
+          "Year: " + movieObject.Year+"\r\n" +
+          "Imdb Rating : " + movieObject.imdbRating+"\r\n" +
+          "Country: " + movieObject.Country+"\r\n" +
+          "Plot: "+ movieObject.Plot+"\r\n" +
+          "Actors: "+ movieObject.Actors+"\r\n" +
+          "Rotten Tomatoes Rating: "+ movieObject.tomatoRating+"\r\n" +
+          "------------------------------end--------------------------"
+          console.log(movieResults);
+          log(movieResults);
+        } else {
+          console.log("Error  :"+ error);
+          return;
+         }
+          
+    })
+    
 }
+        console.log("The movie's rating is: " + response.data.imdbRating);
+
+
+
+
 
 function spotifyThisSong() {
     keys.spotifyKeys.search({ type: 'track', query: userCommand }, function (err, data) {
