@@ -2,6 +2,8 @@ require("dotenv").config();
 var axios = require("axios");
 
 var keys = require("./keys.js");
+var spotify = require("spotify");
+var fs = require("fs");
 
 var liriArgument = process.argv[2];
 var userCommand = process.argv[3];
@@ -14,80 +16,94 @@ switch (liriArgument) {
 
 }
 // functions
+function concertThis() {
+            
+    var queryUrl = "https://rest.bandsintown.com/artists/" + artists + "/events?app_id=anythingfortheappidwillwork";
+    axios.get(queryUrl).then(function(data) {
+             console.log(data);
+    var bands = JSON.parse(data.artistdata.name);
+        for (var i = 0; i < bands.length; i++){
+        }
+
+        console.log("Venue name " + bands.venue.name);
+        console.log("Venue location " + bands.venue.city);
+        console.log("Date of Event " +  moment(bands.datetime).format("MM/DD/YYYY"));
+        
+        
+}
+);
+
+
+function spotifyThisSong() {
+    spotify = new Spotify(keys.spotify);
+    keys.spotifyKeys.search({ type: 'track', query: userCommand }, function (err, data) {
+
+        if(!bands) {
+            bands = "The Sign by Ace of Base" ;
+    }
+        if (err) {
+            return console.log('Error occurred: ' + err);
+        }
+        console.log(data.tracks.items[0]);
+        console.log("this");
+
+        console.log(data.artists.name); 
+        console.log(data.name);
+        console.log(data.preview_url);
+
+
+        if(!bands) {
+            bands = "The Sign by Ace of Base" ;
+    }
+
+
+    });
+    
+    console.log("this");
+}
+};
+
 function movieThis() {
-    var movieName = process.argv[3];
-     if(!movieName) {
-         movieName = "mr nobody";
-     }
-       
+    var movieName = userCommand;
+   
     var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&tomatoes=true&r=json&apikey=trilogy";
         console.log(queryUrl);
 
     axios.get(queryUrl).then(
-        function(error, response, body) {
+        function(response) {
             console.log("The movie's rating is: " + response.data.imdbRating);
             
-        if (!error && response.stausCode === 200){
-       
-    var movieObject = JSON.parse(body);
-          console.log(movieObject);
-
+        var movieObject = response.data;
+          console.log(response.data);
+            
           var movieResults = 
-          "-----------------------------begin----------------------------" + "\r\n"
+          "-----------------------------begin----------------------------" + "\r\n" +
           "Title: " + movieObject.Title+"\r\n" +
           "Year: " + movieObject.Year+"\r\n" +
           "Imdb Rating : " + movieObject.imdbRating+"\r\n" +
+          "Rotten Tomatoes Rating: "+ movieObject.tomatoRating+"\r\n" +
           "Country: " + movieObject.Country+"\r\n" +
+          "Language" + movieObject.Language+"\r\n" +
           "Plot: "+ movieObject.Plot+"\r\n" +
           "Actors: "+ movieObject.Actors+"\r\n" +
-          "Rotten Tomatoes Rating: "+ movieObject.tomatoRating+"\r\n" +
           "------------------------------end--------------------------"
           console.log(movieResults);
-          log(movieResults);
-        } else {
-          console.log("Error  :"+ error);
-          return;
-         }
-          
+
+          //   if(movieObject==="undefined") {
+        //     movieResults = "mr nobody";
+        //     console.log("If you haven't watched 'Mr.Nobody', then you should: http://www.imdb.com/title/tt0485947/");
+        //     console.log("It's on Netfilx!");
+        // }
+     
     })
-    
-}
-        console.log("The movie's rating is: " + response.data.imdbRating);
-
-
-
-
-
-function spotifyThisSong() {
-    keys.spotifyKeys.search({ type: 'track', query: userCommand }, function (err, data) {
-        if (err) {
-            return console.log('Error occurred: ' + err);
-
-        }
-        console.log(data.tracks.items[0]);
-        console.log("this");
-        console.log(data.tracks.items[0].artists[0].name); 
-    });
-}
-
-function concertThis() {
-    var band = process.argv[4];
-    if(!band) {
-        band = "The Sign";
+    .catch(function (error) {
+        console.log(error);
+});
+   
+    function doWhatItSays() {
+        fs.readFile("random.txt", "utf8", function(error, data)  {
+        })
     }
-        params = band
-        
-        axios.get("https://rest.bandsintown.com/artists/" + params + "/events?app_id=anythingfortheappidwillwork").then(
-            function (response) {
-    console.log("The name of the artist is: ",response);
-  }
-  
-);
-
-
-    console.log("this");
-}
-
-function doWhatItSays() {
-
-}
+     
+        // console.log("You selected: do-what-it-says - Sorry this section is not active at this time.")      })
+};
