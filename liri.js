@@ -63,8 +63,7 @@ function spotifyThisSong(userCommand) {
 
         }
     });
-    
-    console.log("this");
+  
 };
 
 
@@ -94,11 +93,16 @@ function movieThis() {
           "------------------------------end--------------------------"
           console.log(movieResults);
 
-          //   if(movieObject==="undefined") {
-        //     movieResults = "mr nobody";
-        //     console.log("If you haven't watched 'Mr.Nobody', then you should: http://www.imdb.com/title/tt0485947/");
-        //     console.log("It's on Netfilx!");
-        // }
+         
+        if(!userCommand) {
+            userCommand= "Mr. Nobody" ;
+            console.log("If you haven't watched 'Mr.Nobody', then you should: http://www.imdb.com/title/tt0485947/");
+            console.log("It's on Netfilx!");
+    }
+        if (err) {
+            console.log('Error occurred: ' + err);
+            return; 
+        }
      
     })
     .catch(function (error) {
@@ -110,5 +114,5 @@ function movieThis() {
         })
     }
      
-        // console.log("You selected: do-what-it-says - Sorry this section is not active at this time.")      })
+        console.log("You selected: do-what-it-says - Sorry this section is not active at this time.")      
 };
