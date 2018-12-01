@@ -1,8 +1,12 @@
 require("dotenv").config();
+var Spotify = require('node-spotify-api');
+var spotify = new Spotify('keys.spotify');
 var axios = require("axios");
+var moment = require("moment");
 
-var keys = require("./keys.js");
-var spotify = require("spotify");
+var keys = require("./keys.js")
+
+
 var fs = require("fs");
 
 var liriArgument = process.argv[2];
@@ -17,33 +21,39 @@ switch (liriArgument) {
 }
 // functions
 function concertThis() {
-            
+     var artists = userCommand;    
     var queryUrl = "https://rest.bandsintown.com/artists/" + artists + "/events?app_id=anythingfortheappidwillwork";
-    axios.get(queryUrl).then(function(data) {
-             console.log(data);
-    var bands = JSON.parse(data.artistdata.name);
-        for (var i = 0; i < bands.length; i++){
-        }
+    axios.get(queryUrl).then(function(response) {
+     var bandData = response.data;
+      console.log(response.data);
 
-        console.log("Venue name " + bands.venue.name);
-        console.log("Venue location " + bands.venue.city);
-        console.log("Date of Event " +  moment(bands.datetime).format("MM/DD/YYYY"));
-        
-        
-}
-);
+    var bands = [
+        "Venue name " + bandData.venue.name,
+        "Venue location " + bandData.venue.city,
+        "Date of Event " +  moment(bandData.venue.datetime).format("MM/DD/YYYY"),
+    ].join("\n\n");
+
+    fs.appendFile("log.txt", bands + divider, function (err) {
+        if (err) throw err;
+        console.log(bands);
+      })
+})
+};
 
 
-function spotifyThisSong() {
-    spotify = new Spotify(keys.spotify);
-    keys.spotifyKeys.search({ type: 'track', query: userCommand }, function (err, data) {
+function spotifyThisSong(userCommand) {
+    spotify.search({ type: 'track', query: userCommand }, function (err, data) {
 
-        if(!bands) {
-            bands = "The Sign by Ace of Base" ;
+        if(!userCommand) {
+            userCommand= "The Sign by Ace of Base" ;
     }
         if (err) {
-            return console.log('Error occurred: ' + err);
+            console.log('Error occurred: ' + err);
+            return; 
         }
+        var data = data.tracks.items[0];
+        console.log("------Aritist---------------");
+        for (i=0; i < data.artists.length; i++) {
         console.log(data.tracks.items[0]);
         console.log("this");
 
@@ -51,17 +61,12 @@ function spotifyThisSong() {
         console.log(data.name);
         console.log(data.preview_url);
 
-
-        if(!bands) {
-            bands = "The Sign by Ace of Base" ;
-    }
-
-
+        }
     });
     
     console.log("this");
-}
 };
+
 
 function movieThis() {
     var movieName = userCommand;
