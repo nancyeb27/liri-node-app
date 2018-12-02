@@ -11,11 +11,19 @@ var userCommand = process.argv[3];
 
 switch (liriArgument) {
     case "concert-this": concertThis(); break;
-    case "spotify-this-song": spotifyThisSong(); break;
-    case "movie-this": movieThis(); break;
+    case "spotify-this-song": 
+    if (userCommand === "") {
+        userCommand = "The Sign (Ace of Base)";
+        spotifyThisSong(); break;
+    }
+    case "movie-this": 
+    if (userCommand === "") {
+        userCommand = "Mr Nobody";
+        movieThis(); break;
+    }
     case "do-what-it-says": doWhatItSays(); break;
 
-}
+};
 // functions
 function concertThis() {
      var artists = userCommand;    
@@ -38,35 +46,40 @@ function concertThis() {
 };
 
 
+
+
 function spotifyThisSong() {
    spotify.search({ type: 'track', query: userCommand }, function (err, data) {
         console.log(userCommand);
-       if(!userCommand) {
-           userCommand= "The Sign by Ace of Base" ;
-   }
-       if (err) {
-           console.log('Error occurred: ' + err);
-           return;
-       }
+  
        var data = data.tracks.items[0];
+        console.log(data.artists);
        console.log("------Aritist---------------");
        for (i=0; i < data.artists.length; i++) {
-       console.log(data.tracks.items[0]);
-       console.log("this");
+           for (var i = 0; i < 5; i++){
+               if (data[i] != undefined){
+                   var spotifyResults = 
+                   "Artist: " + data.artists.name + "\r\n" +
+                   "Song: " + data.name + "\r\n" +
+                   "Preview Url: " + data.preview_url + "\r\n" +
+                   "----------------" + "end" + "------------------" + "\r\n";
+                   console.log(spotifyResults);
+                   log(spotifyResults);
 
-       console.log(data.artists.name);
-       console.log(data.name);
-       console.log(data.preview_url);
-
-       }
+                   if (err) {
+                    console.log('Error occurred: ' + err);
+                    return; 
+               }
+           }
+        
+       };
+ };
    });
-
 };
 
 function movieThis() {
     var movieName = userCommand;
-   
-    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&tomatoes=true&r=json&apikey=trilogy";
+       var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&tomatoes=true&r=json&apikey=trilogy";
         console.log(queryUrl);
 
     axios.get(queryUrl).then(
@@ -88,13 +101,8 @@ function movieThis() {
           "Actors: "+ movieObject.Actors+"\r\n" +
           "------------------------------end--------------------------"
           console.log(movieResults);
-
-         
-        if(!userCommand) {
-            userCommand = "Mr. Nobody" ;
-            console.log("If you haven't watched 'Mr.Nobody', then you should: http://www.imdb.com/title/tt0485947/");
-            console.log("It's on Netfilx!");
-    }
+   
+        
         if (err) {
             console.log('Error occurred: ' + err);
             return; 
@@ -105,11 +113,19 @@ function movieThis() {
         console.log(error);
 });
 };
-   
+;
+
     function doWhatItSays() {
         fs.readFile("random.txt", "utf8", function(error, data)  {
-        })
-   
+            if (!error) {
+                dowWhatItSaysResults = data.split(",");
+                spotifyThisSong();
+             } else {
+                 console.log("Error occurred" + error);
+             
+             console.log("You selected: do-what-it-says - Sorry this section is not active at this time.");      
+             }
+   });
      
-        console.log("You selected: do-what-it-says - Sorry this section is not active at this time.")      
     }
+
