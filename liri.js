@@ -1,12 +1,10 @@
-require("dotenv").config();
-var Spotify = require('node-spotify-api');
+require("dotenv").config()
+var Spotify = require("node-spotify-api");
+var keys = require("./keys.js");
 var spotify = new Spotify('keys.spotify');
+
 var axios = require("axios");
 var moment = require("moment");
-
-var keys = require("./keys.js")
-
-
 var fs = require("fs");
 
 var liriArgument = process.argv[2];
@@ -31,7 +29,7 @@ function concertThis() {
         "Venue name " + bandData.venue.name,
         "Venue location " + bandData.venue.city,
         "Date of Event " +  moment(bandData.venue.datetime).format("MM/DD/YYYY"),
-    ].join("\n\n");
+        ].join("\n\n");
 
     fs.appendFile("log.txt", bands + divider, function (err) {
         if (err) throw err;
@@ -108,6 +106,7 @@ function movieThis() {
     .catch(function (error) {
         console.log(error);
 });
+};
    
     function doWhatItSays() {
         fs.readFile("random.txt", "utf8", function(error, data)  {
@@ -115,4 +114,3 @@ function movieThis() {
     }
      
         console.log("You selected: do-what-it-says - Sorry this section is not active at this time.")      
-};
