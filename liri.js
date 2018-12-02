@@ -1,14 +1,13 @@
-require("dotenv").config()
+require("dotenv").config();
 var Spotify = require("node-spotify-api");
-var keys = require("./keys.js");
-var spotify = new Spotify('keys.spotify');
-
+var keys = require("./keys");
 var axios = require("axios");
 var moment = require("moment");
 var fs = require("fs");
-
+var spotify = new Spotify(keys.spotify);
 var liriArgument = process.argv[2];
 var userCommand = process.argv[3];
+
 
 switch (liriArgument) {
     case "concert-this": concertThis(); break;
@@ -39,31 +38,30 @@ function concertThis() {
 };
 
 
-function spotifyThisSong(userCommand) {
-    spotify.search({ type: 'track', query: userCommand }, function (err, data) {
+function spotifyThisSong() {
+   spotify.search({ type: 'track', query: userCommand }, function (err, data) {
+        console.log(userCommand);
+       if(!userCommand) {
+           userCommand= "The Sign by Ace of Base" ;
+   }
+       if (err) {
+           console.log('Error occurred: ' + err);
+           return;
+       }
+       var data = data.tracks.items[0];
+       console.log("------Aritist---------------");
+       for (i=0; i < data.artists.length; i++) {
+       console.log(data.tracks.items[0]);
+       console.log("this");
 
-        if(!userCommand) {
-            userCommand= "The Sign by Ace of Base" ;
-    }
-        if (err) {
-            console.log('Error occurred: ' + err);
-            return; 
-        }
-        var data = data.tracks.items[0];
-        console.log("------Aritist---------------");
-        for (i=0; i < data.artists.length; i++) {
-        console.log(data.tracks.items[0]);
-        console.log("this");
+       console.log(data.artists.name);
+       console.log(data.name);
+       console.log(data.preview_url);
 
-        console.log(data.artists.name); 
-        console.log(data.name);
-        console.log(data.preview_url);
+       }
+   });
 
-        }
-    });
-  
 };
-
 
 function movieThis() {
     var movieName = userCommand;
@@ -93,7 +91,7 @@ function movieThis() {
 
          
         if(!userCommand) {
-            userCommand= "Mr. Nobody" ;
+            userCommand = "Mr. Nobody" ;
             console.log("If you haven't watched 'Mr.Nobody', then you should: http://www.imdb.com/title/tt0485947/");
             console.log("It's on Netfilx!");
     }
@@ -111,6 +109,7 @@ function movieThis() {
     function doWhatItSays() {
         fs.readFile("random.txt", "utf8", function(error, data)  {
         })
-    }
+   
      
         console.log("You selected: do-what-it-says - Sorry this section is not active at this time.")      
+    }
