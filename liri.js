@@ -11,16 +11,8 @@ var userCommand = process.argv[3];
 
 switch (liriArgument) {
     case "concert-this": concertThis(); break;
-    case "spotify-this-song": 
-    if (userCommand === "") {
-        userCommand = "The Sign (Ace of Base)";
-        spotifyThisSong(); break;
-    }
-    case "movie-this": 
-    if (userCommand === "") {
-        userCommand = "Mr Nobody";
-        movieThis(); break;
-    }
+    case "spotify-this-song":spotifyThisSong(); break;
+    case "movie-this": movieThis(); break;
     case "do-what-it-says": doWhatItSays(); break;
 
 };
@@ -46,11 +38,13 @@ function concertThis() {
 };
 
 
-
-
 function spotifyThisSong() {
    spotify.search({ type: 'track', query: userCommand }, function (err, data) {
         console.log(userCommand);
+        if (userCommand === "") {
+            userCommand = "The Sign (Ace of Base)";
+        }
+
   
        var data = data.tracks.items[0];
         console.log(data.artists);
@@ -73,7 +67,7 @@ function spotifyThisSong() {
            }
         
        };
- };
+};
    });
 };
 
@@ -81,11 +75,13 @@ function movieThis() {
     var movieName = userCommand;
        var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&tomatoes=true&r=json&apikey=trilogy";
         console.log(queryUrl);
+        if (userCommand === "") {
+            userCommand = "Mr Nobody";
+        }
 
     axios.get(queryUrl).then(
         function(response) {
-            console.log("The movie's rating is: " + response.data.imdbRating);
-            
+                       
         var movieObject = response.data;
           console.log(response.data);
             
@@ -101,13 +97,7 @@ function movieThis() {
           "Actors: "+ movieObject.Actors+"\r\n" +
           "------------------------------end--------------------------"
           console.log(movieResults);
-   
-        
-        if (err) {
-            console.log('Error occurred: ' + err);
-            return; 
-        }
-     
+           
     })
     .catch(function (error) {
         console.log(error);
@@ -117,15 +107,21 @@ function movieThis() {
 
     function doWhatItSays() {
         fs.readFile("random.txt", "utf8", function(error, data)  {
-            if (!error) {
-                dowWhatItSaysResults = data.split(",");
-                spotifyThisSong();
-             } else {
-                 console.log("Error occurred" + error);
+            if (error) {
+                console.log("Error occurred" + error);
+            }
+                
+             var dataArr = data.split(",");
+             command = dataArr[0];
+             userCommand = dataArr[1];
+
+        switch (command) {
+            case "concert-this": concertThis(); break;
+            case "spotify-this-song":spotifyThisSong(); break;
+            case "movie-this": movieThis(); break;        
+        };;         
              
-             console.log("You selected: do-what-it-says - Sorry this section is not active at this time.");      
-             }
-   });
+   })
      
-    }
+};
 
