@@ -1,4 +1,9 @@
 # liri-node-app
+
+YouTube with walkthough of my work
+epoiode 1:https://youtu.be/AkJj6jRs8TU
+
+
 LIRI Bot
 
 
