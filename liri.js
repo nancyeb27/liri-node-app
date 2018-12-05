@@ -11,117 +11,122 @@ var userCommand = process.argv[3];
 
 switch (liriArgument) {
     case "concert-this": concertThis(); break;
-    case "spotify-this-song":spotifyThisSong(); break;
+    case "spotify-this-song": spotifyThisSong(); break;
     case "movie-this": movieThis(); break;
     case "do-what-it-says": doWhatItSays(); break;
 
 };
 // functions
-function concertThis() {
-     var artists = userCommand;    
+function concertThis(artists) {
+
     var queryUrl = "https://rest.bandsintown.com/artists/" + artists + "/events?app_id=anythingfortheappidwillwork";
-    axios.get(queryUrl).then(function(response) {
-     var bandData = response.data;
-      console.log(response.data);
+    console.log(queryUrl)
 
-    var bands = [
-        "Venue name " + bandData.venue.name,
-        "Venue location " + bandData.venue.city,
-        "Date of Event " +  moment(bandData.venue.datetime).format("MM/DD/YYYY"),
-        ].join("\n\n");
+    axios.get(queryUrl).then(function (response) {
+        var results = response.data;
+        console.log(response.data);
 
-    fs.appendFile("log.txt", bands + divider, function (err) {
-        if (err) throw err;
-        console.log(bands);
-      })
-})
-};
+        for (var i = 0; i < response.data.length; i++) {
 
+            console.log(`Venue name: ${results[i].venue.name}`);
+            console.log(`Venue location: ${results[i].venue.city}`);
+            console.log(`Date of Event:${moment(results[i].datetime).format("MM/DD/YYYY")}\n`);
 
-function spotifyThisSong() {
-   spotify.search({ type: 'track', query: userCommand }, function (err, data) {
-        console.log(userCommand);
-        if (userCommand === "") {
-            userCommand = "The Sign (Ace of Base)";
+            fs.appendFile("log.txt", artists, function (err) {
+                if (err) throw err;
+            })
         }
-
-  
-       var data = data.tracks.items[0];
-        console.log(data.artists);
-       console.log("------Aritist---------------");
-       for (i=0; i < data.artists.length; i++) {
-           for (var i = 0; i < 5; i++){
-               if (data[i] != undefined){
-                   var spotifyResults = 
-                   "Artist: " + data.artists.name + "\r\n" +
-                   "Song: " + data.name + "\r\n" +
-                   "Preview Url: " + data.preview_url + "\r\n" +
-                   "----------------" + "end" + "------------------" + "\r\n";
-                   console.log(spotifyResults);
-                   log(spotifyResults);
-
-                   if (err) {
-                    console.log('Error occurred: ' + err);
-                    return; 
-               }
-           }
-        
-       };
+    })
 };
-   });
-};
+
+
+function spotifyThisSong(userCommand) {
+    console.log(userCommand);
+    if (userCommand === undefined) {
+        userCommand = "The Sign (Ace of Base)";
+    }
+
+    spotify.search({ type: 'track', query: userCommand }, function (err, data) {
+
+
+
+        var data = data.tracks.items[0];
+        console.log(data);
+        for (i = 0; i < data.artists.length; i++) {
+            console.log("------Aritist---------------");
+            console.log(`Artist: ${data.artists[i].name + "\r\n"}`);
+            console.log(`Song: ${data.name + "\r\n"}`);
+            console.log(`Preview Url: ${data.preview_url + "\r\n"}`);
+            console.log(`Album Name:  ${data.album.name + "\r\n"}`);
+            console.log("----------------" + "end" + "------------------" + "\r\n");
+
+            if (err) {
+                console.log('Error occurred: ' + err);
+                return;
+
+            }
+        }
+    })
+}
+
 
 function movieThis() {
     var movieName = userCommand;
-       var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&tomatoes=true&r=json&apikey=trilogy";
-        console.log(queryUrl);
-        if (userCommand === "") {
-            userCommand = "Mr Nobody";
-        }
+    if (userCommand === undefined) {
+        userCommand = "Mr Nobody";
+    }
+    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&tomatoes=true&r=json&apikey=trilogy";
+    console.log(queryUrl);
+
 
     axios.get(queryUrl).then(
-        function(response) {
-                       
-        var movieObject = response.data;
-          console.log(response.data);
-            
-          var movieResults = 
-          "-----------------------------begin----------------------------" + "\r\n" +
-          "Title: " + movieObject.Title+"\r\n" +
-          "Year: " + movieObject.Year+"\r\n" +
-          "Imdb Rating : " + movieObject.imdbRating+"\r\n" +
-          "Rotten Tomatoes Rating: "+ movieObject.tomatoRating+"\r\n" +
-          "Country: " + movieObject.Country+"\r\n" +
-          "Language" + movieObject.Language+"\r\n" +
-          "Plot: "+ movieObject.Plot+"\r\n" +
-          "Actors: "+ movieObject.Actors+"\r\n" +
-          "------------------------------end--------------------------"
-          console.log(movieResults);
-           
-    })
-    .catch(function (error) {
-        console.log(error);
-});
-};
-;
+        function (response) {
 
-    function doWhatItSays() {
-        fs.readFile("random.txt", "utf8", function(error, data)  {
-            if (error) {
-                console.log("Error occurred" + error);
-            }
-                
-             var dataArr = data.split(",");
-             command = dataArr[0];
-             userCommand = dataArr[1];
+            var movieObject = response.data;
+            console.log(response.data);
 
-        switch (command) {
-            case "concert-this": concertThis(); break;
-            case "spotify-this-song":spotifyThisSong(); break;
-            case "movie-this": movieThis(); break;        
-        };;         
-             
-   })
-     
-};
+            var movieResults =
+                "-----------------------------begin----------------------------" + "\r\n" +
+                "Title: " + movieObject.Title + "\r\n" +
+                "Year: " + movieObject.Year + "\r\n" +
+                "Imdb Rating : " + movieObject.imdbRating + "\r\n" +
+                "Rotten Tomatoes Rating: " + movieObject.tomatoRating + "\r\n" +
+                "Country: " + movieObject.Country + "\r\n" +
+                "Language" + movieObject.Language + "\r\n" +
+                "Plot: " + movieObject.Plot + "\r\n" +
+                "Actors: " + movieObject.Actors + "\r\n" +
+                "------------------------------end--------------------------"
+            console.log(movieResults);
 
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+
+}
+
+
+function doWhatItSays() {
+    fs.readFile("random.txt", "utf8", function (error, data) {
+        if (error) {
+            console.log("Error occurred" + error);
+        }
+
+        var dataArr = data.split(",");
+
+        if (dataArr.length === 2) {
+
+
+            var command = dataArr[0];
+            var userCommand = dataArr[1];
+
+            switch (command) {
+                case "concert-this": concertThis(); break;
+                case "spotify-this-song": spotifyThisSong(userCommand); break;
+                case "movie-this": movieThis(userCommand); break;
+            };;
+        }
+    });
+
+
+}
