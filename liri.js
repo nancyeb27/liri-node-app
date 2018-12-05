@@ -40,18 +40,16 @@ function concertThis(artists) {
 };
 
 
-function spotifyThisSong(userCommand) {
-    console.log(userCommand);
+function spotifyThisSong() {
+    //  console.log(userCommand);
     if (userCommand === undefined) {
         userCommand = "The Sign (Ace of Base)";
     }
 
     spotify.search({ type: 'track', query: userCommand }, function (err, data) {
 
-
-
         var data = data.tracks.items[0];
-        console.log(data);
+         console.log(data);
         for (i = 0; i < data.artists.length; i++) {
             console.log("------Aritist---------------");
             console.log(`Artist: ${data.artists[i].name + "\r\n"}`);
@@ -122,7 +120,7 @@ function doWhatItSays() {
 
             switch (command) {
                 case "concert-this": concertThis(); break;
-                case "spotify-this-song": spotifyThisSong(userCommand); break;
+                case "spotify-this-song": spotifyThisSong(); break;
                 case "movie-this": movieThis(userCommand); break;
             };;
         }
