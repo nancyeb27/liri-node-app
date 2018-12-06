@@ -20,11 +20,11 @@ switch (liriArgument) {
 function concertThis(artists) {
 
     var queryUrl = "https://rest.bandsintown.com/artists/" + artists + "/events?app_id=anythingfortheappidwillwork";
-    console.log(queryUrl)
+    // console.log(queryUrl)
 
     axios.get(queryUrl).then(function (response) {
         var results = response.data;
-        console.log(response.data);
+        // console.log(response.data);
 
         for (var i = 0; i < response.data.length; i++) {
 
@@ -41,7 +41,7 @@ function concertThis(artists) {
 
 
 function spotifyThisSong() {
-    //  console.log(userCommand);
+    console.log(userCommand);
     if (userCommand === undefined) {
         userCommand = "The Sign (Ace of Base)";
     }
@@ -49,7 +49,7 @@ function spotifyThisSong() {
     spotify.search({ type: 'track', query: userCommand }, function (err, data) {
 
         var data = data.tracks.items[0];
-         console.log(data);
+        // console.log(data);
         for (i = 0; i < data.artists.length; i++) {
             console.log("------Aritist---------------");
             console.log(`Artist: ${data.artists[i].name + "\r\n"}`);
@@ -81,7 +81,7 @@ function movieThis() {
         function (response) {
 
             var movieObject = response.data;
-            console.log(response.data);
+            // console.log(response.data);
 
             var movieResults =
                 "-----------------------------begin----------------------------" + "\r\n" +
@@ -117,11 +117,11 @@ function doWhatItSays() {
 
             var command = dataArr[0];
             var userCommand = dataArr[1];
-
-            switch (command) {
+            console.log(userCommand)
+               switch (command) {
                 case "concert-this": concertThis(); break;
                 case "spotify-this-song": spotifyThisSong(); break;
-                case "movie-this": movieThis(userCommand); break;
+                case "movie-this": movieThis(); break;
             };;
         }
     });
