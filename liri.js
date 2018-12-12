@@ -10,10 +10,10 @@ var userCommand = process.argv[3];
 
 
 switch (liriArgument) {
-    case "concert-this": concertThis(); break;
-    case "spotify-this-song": spotifyThisSong(); break;
-    case "movie-this": movieThis(); break;
-    case "do-what-it-says": doWhatItSays(); break;
+    case "concert-this": concertThis(userCommand); break;
+    case "spotify-this-song": spotifyThisSong(userCommand); break;
+    case "movie-this": movieThis(userCommand); break;
+    case "do-what-it-says": doWhatItSays(userCommand); break;
 
 };
 // functions
@@ -24,7 +24,7 @@ function concertThis(artists) {
 
     axios.get(queryUrl).then(function (response) {
         var results = response.data;
-        // console.log(response.data);
+         console.log(response.data);
 
         for (var i = 0; i < response.data.length; i++) {
 
@@ -40,8 +40,8 @@ function concertThis(artists) {
 };
 
 
-function spotifyThisSong() {
-    console.log(userCommand);
+function spotifyThisSong(userCommand) {
+    // console.log(userCommand);
     if (userCommand === undefined) {
         userCommand = "The Sign (Ace of Base)";
     }
@@ -68,12 +68,12 @@ function spotifyThisSong() {
 }
 
 
-function movieThis() {
+function movieThis(userCommand) {
     var movieName = userCommand;
     if (userCommand === undefined) {
         userCommand = "Mr Nobody";
     }
-    var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&tomatoes=true&r=json&apikey=trilogy";
+    var queryUrl = "http://www.omdbapi.com/?t=" + userCommand + "&y=&plot=short&tomatoes=true&r=json&apikey=trilogy";
     console.log(queryUrl);
 
 
@@ -117,7 +117,7 @@ function doWhatItSays() {
 
             var command = dataArr[0];
             var userCommand = dataArr[1];
-            console.log(userCommand)
+            // console.log(userCommand)
                switch (command) {
                 case "concert-this": concertThis(); break;
                 case "spotify-this-song": spotifyThisSong(); break;
